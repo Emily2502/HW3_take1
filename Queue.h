@@ -24,12 +24,35 @@ public:
      * @return
      *      void
     */
-    Queue()
-    {
-        m_front = NULL;
-        m_back = NULL;
-    }
+    Queue() = default;
 
+    /**
+     * Copy c'tor of Queue class
+     *
+     * @param //ToDo: comment
+     */
+    Queue(const Queue<T>& queue)
+    {
+        Node<T>* nodeToCopy = queue.m_front;
+        Node<T>* nodeToChange = m_front;
+
+        if (nodeToCopy != NULL)
+        {
+            nodeToChange = new Node<T>;
+            nodeToChange->m_data = nodeToCopy->m_data;
+            nodeToCopy = nodeToCopy->m_next;
+
+            while (nodeToCopy != NULL)
+            {
+                nodeToChange->m_next = new Node<T>;
+                nodeToChange = nodeToChange->m_next;
+                nodeToChange->m_data = nodeToCopy->m_data;
+                nodeToCopy = nodeToCopy->m_next;
+            }
+            m_back = nodeToChange;
+            m_back->m_next = NULL;
+        }
+    }
     /**
      * D'tor of Queue class
      *
@@ -93,8 +116,8 @@ public:
     void print_linked();
 
 private:
-    Node<T>* m_front;
-    Node<T>* m_back;
+    Node<T>* m_front = NULL;
+    Node<T>* m_back = NULL;
 };
 
 
@@ -168,5 +191,6 @@ Queue<T>& filter(Queue<T> queue, Condition condition)
 {
     Queue<T> temp;
     return temp;
+
 }
 #endif //HW3_QUEUE_H

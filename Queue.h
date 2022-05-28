@@ -163,8 +163,7 @@ int Queue<T>::size() const
 }
 
 
-template<class T>
-template<class Condition>
+template<class T, class Condition>
 Queue<T>& filter(Queue<T> queue, Condition condition)
 {
     Queue<T> temp;

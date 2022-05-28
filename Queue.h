@@ -18,43 +18,92 @@ class Queue{
 
 public:
 
+    /**
+     * C'tor of Queue class
+     *
+     * @return
+     *      void
+    */
     Queue()
     {
-        m_head=NULL;
-        m_tail=NULL;
+        m_front = NULL;
+        m_back = NULL;
     }
 
+    /**
+     * D'tor of Queue class
+     *
+     * @return
+     *      void
+    */
     ~Queue()
     {
-        Node<T>* tmp =m_head;
-        Node<T>* tmp2;
-        while(tmp != NULL)
+        Node<T>* tempNode = m_front;
+        while(tempNode != NULL)
         {
-            tmp2 = tmp->m_next;
-            delete tmp;
-            tmp = tmp2;
+            Node<T>* toDelete = tempNode;
+            tempNode = tempNode->m_next;
+            delete toDelete;
         }
-        m_head = NULL;
     }
+
+    /**
+     * Adds a new member to the back of a given queue
+     *
+     * @return
+     *      void
+    */
     void pushBack(T member);
+
+    /**
+     * Returns a reference to the first member of a given queue
+     *
+     * @return
+     *      reference to the first member of tha given queue
+    */
     T& front();
+
+    /**
+     * Deletes the first member of a given queue
+     *
+     * @return
+     *      void
+    */
     void popFront();
-    int size();
+
+    /**
+     * Returns the size of a given queue
+     *
+     * @return
+     *      the size of a given queue
+    */
+    int size() const;
+
+    /**
+     * Returns the size of a given queue
+     *
+     * @return
+     *      the size of a given queue
+    */
+    friend Queue filter();
+
 
     // ToDo: delete
     void print_linked();
 
 private:
-    Node<T>* m_head;
-    Node<T>* m_tail;
+    Node<T>* m_front;
+    Node<T>* m_back;
 };
 
 
 // ToDo: delete
 template<class T>
-void Queue<T>::print_linked(){
-    Node<T> *t=m_head;
-    while(t!=NULL){
+void Queue<T>::print_linked()
+{
+    Node<T> *t=m_front;
+    while(t!=NULL)
+    {
         std::cout << t->m_data << std::endl;
         t=t->m_next;
     }
@@ -65,48 +114,58 @@ template<class T>
 void Queue<T>::pushBack(T member)
 {
     {
-        Node<T>* tmp = new Node<T>;
-        tmp->m_data = member;
-        tmp->m_next = NULL;
+        Node<T>* temp = new Node<T>;
+        temp->m_data = member;
+        temp->m_next = NULL;
 
-        if (m_head == NULL)
+        if (m_front == NULL)
         {
-            m_head = tmp;
-            m_tail = tmp;
+            m_front = temp;
+            m_back = temp;
         }
         else
         {
-            m_tail->m_next = tmp;
-            m_tail = m_tail->m_next;   // tail = null.
+            m_back->m_next = temp;
+            m_back = m_back->m_next;
         }
     }
 }
 
+
 template<class T>
 T& Queue<T>::front()
 {
-    return m_head->m_data;
+    return m_front->m_data;
 }
 
 
 template<class T>
 void Queue<T>::popFront()
 {
-    Node<T>* toDelete = m_head;
-    m_head = m_head->m_next;
+    Node<T>* toDelete = m_front;
+    m_front = m_front->m_next;
     delete toDelete;
 }
 
+
 template<class T>
-int Queue<T>::size()
+int Queue<T>::size() const
 {
     int result = 0;
-    Node<T>* tempNode = m_head;
+    Node<T>* tempNode = m_front;
     while (tempNode != NULL)
     {
         ++result;
         tempNode = tempNode->m_next;
     }
     return result;
+}
+
+
+template<class T, class Condition>
+Queue<T> filter()
+{
+    Queue<T> temp;
+    return temp;
 }
 #endif //HW3_QUEUE_H

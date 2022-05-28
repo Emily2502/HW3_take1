@@ -7,12 +7,14 @@
 int main(){
 
     Queue<int> one;
+    one.pushBack(3);
+    one.pushBack(7);
+    one.pushBack(9);
     //one.print_linked();
 
-    //one.front() = 5;
-    std::cout << one.size();
+    std::cout << one.front();
     one.popFront();
-    std::cout << one.size();
+
 
 
 }

@@ -24,11 +24,14 @@ public:
      * @return
      *      void
     */
-    Queue()
-    {
-        m_front = NULL;
-        m_back = NULL;
-    }
+    Queue() = default;
+
+    /**
+     * Copy c'tor of Queue class
+     *
+     * @param //ToDo: comment
+     */
+    Queue(const Queue& queue);
 
     /**
      * D'tor of Queue class
@@ -36,16 +39,15 @@ public:
      * @return
      *      void
     */
-    ~Queue()
-    {
-        Node<T>* tempNode = m_front;
-        while(tempNode != NULL)
-        {
-            Node<T>* toDelete = tempNode;
-            tempNode = tempNode->m_next;
-            delete toDelete;
-        }
-    }
+    ~Queue();
+
+    /**
+     * Assignment operator of Queue class
+     *
+     * @return
+     *      //ToDo: comment
+    */
+    Queue<T>& operator=(const Queue<T>& queue);
 
     /**
      * Adds a new member to the back of a given queue
@@ -80,33 +82,80 @@ public:
     int size() const;
 
     /**
-     * Returns the size of a given queue
+     * //ToDo: comment
      *
      * @return
-     *      the size of a given queue
+     *
     */
-    friend Queue filter();
-
+    template<class Condition>
+    friend void transform(Queue queue, Condition condition);
 
     // ToDo: delete
     void print_linked();
 
 private:
-    Node<T>* m_front;
-    Node<T>* m_back;
+    Node<T>* m_front = NULL;
+    Node<T>* m_back = NULL;
 };
 
+template<class T, class Condition>
+Queue<T>& filter(const Queue<T>& queue, Condition condition);
 
-// ToDo: delete
+
 template<class T>
-void Queue<T>::print_linked()
+Queue<T>::Queue(const Queue<T>& queue)
 {
-    Node<T> *t=m_front;
-    while(t!=NULL)
+    Node<T>* nodeToCopy = queue.m_front;
+    Node<T>* nodeToChange;
+
+    if (nodeToCopy != NULL)
     {
-        std::cout << t->m_data << std::endl;
-        t=t->m_next;
+        nodeToChange = new Node<T>;
+        nodeToChange->m_data = nodeToCopy->m_data;
+        nodeToCopy = nodeToCopy->m_next;
+        m_front = nodeToChange;
+
+        while (nodeToCopy != NULL)
+        {
+            nodeToChange->m_next = new Node<T>;
+            nodeToChange = nodeToChange->m_next;
+            nodeToChange->m_data = nodeToCopy->m_data;
+            nodeToCopy = nodeToCopy->m_next;
+        }
+        m_back = nodeToChange;
+        m_back->m_next = NULL;
     }
+}
+
+
+template<class T>
+Queue<T>::~Queue()
+{
+    Node<T>* tempNode = m_front;
+    while(tempNode != NULL)
+    {
+        Node<T>* toDelete = tempNode;
+        tempNode = tempNode->m_next;
+        delete toDelete;
+    }
+}
+
+
+template<class T>
+Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
+{
+    if (this == &queue)
+    {
+        return *this;
+    }
+    Node<T>* tempFront1 = m_front;
+    while (tempFront1 != NULL)
+    {
+        Node<T>* toDelete = tempFront1;
+        tempFront1 = tempFront1->m_next;
+        delete toDelete;
+    }
+    //ToDo: copy linked list to *this
 }
 
 
@@ -163,9 +212,44 @@ int Queue<T>::size() const
 
 
 template<class T, class Condition>
-Queue<T> filter()
+void transform(Queue<T> queue, Condition condition)
 {
-    Queue<T> temp;
-    return temp;
+    Node<T>* tempNode = queue.m_front;
+    while (tempNode != NULL)
+    {
+        tempNode->m_data=condition(tempNode->m_data);
+        tempNode=tempNode->m_next;
+    }
+
+}
+
+
+template<class T, class Condition>
+Queue<T>& filter(const Queue<T>& queue, Condition condition)
+{
+    Queue<T> result;
+    Queue<T> temp_queue = queue;
+    while (temp_queue.size() > 0)
+    {
+        if (condition(temp_queue.front()))
+        {
+            result.pushBack(queue.front());
+        }
+        temp_queue.popFront();
+    }
+    return result;
+}
+
+
+// ToDo: delete
+template<class T>
+void Queue<T>::print_linked()
+{
+    Node<T> *t=m_front;
+    while(t!=NULL)
+    {
+        std::cout << t->m_data << std::endl;
+        t=t->m_next;
+    }
 }
 #endif //HW3_QUEUE_H

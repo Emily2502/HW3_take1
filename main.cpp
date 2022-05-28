@@ -10,7 +10,11 @@ int main(){
     one.pushBack(3);
     one.pushBack(7);
     one.pushBack(9);
-    one.print_linked();
+    //one.print_linked();
+
+    std::cout << one.front();
+    one.popFront();
+
 
 
 }

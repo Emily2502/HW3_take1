@@ -85,7 +85,8 @@ public:
      * @return
      *      the size of a given queue
     */
-    friend Queue filter();
+    template<class Condition>
+    friend Queue& filter(Queue<T> queue, Condition condition);
 
 
     // ToDo: delete
@@ -162,8 +163,9 @@ int Queue<T>::size() const
 }
 
 
-template<class T, class Condition>
-Queue<T> filter()
+template<class T>
+template<class Condition>
+Queue<T>& filter(Queue<T> queue, Condition condition)
 {
     Queue<T> temp;
     return temp;

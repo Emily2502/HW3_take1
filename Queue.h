@@ -108,17 +108,43 @@ public:
      * @return
      *      the size of a given queue
     */
+
     template<class Condition>
     friend Queue& filter(Queue<T> queue, Condition condition);
 
 
+    template<class Condition>
+    friend void transform(Queue queue, Condition condition);
     // ToDo: delete
     void print_linked();
 
-private:
+
+    Queue<T>& operator=(const Queue<T>& queue) ;
+
+
+        private:
     Node<T>* m_front = NULL;
-    Node<T>* m_back = NULL;
+    Node<T>* m_back =NULL;
 };
+
+template<class T>
+Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
+{
+    if (this == &queue)
+    {
+        return *this;
+    }
+    Node<T>* tempFront1 = m_front;
+    while (tempFront1 != NULL)
+    {
+        Node<T>* toDelete = tempFront1;
+        tempFront1 = tempFront1->m_next;
+        delete toDelete;
+    }
+}
+
+template<class T, class Condition>
+Queue<T>& filter(const Queue<T>& queue, Condition condition);
 
 
 // ToDo: delete
@@ -187,10 +213,33 @@ int Queue<T>::size() const
 
 
 template<class T, class Condition>
-Queue<T>& filter(Queue<T> queue, Condition condition)
+Queue<T>& filter(const Queue<T>& queue, Condition condition)
 {
-    Queue<T> temp;
-    return temp;
+    Queue<T> result;
+    Queue<T> temp_queue = queue;
+    while (temp_queue.size() > 0)
+    {
+        if (condition(temp_queue.front()))
+        {
+            result.pushBack(queue.front());
+        }
+        temp_queue.popFront();
+    }
+    return result;
+}
+
+
+
+
+template<class T, class Condition>
+void transform(Queue<T> queue, Condition condition)
+{
+    Node<T>* tempNode = queue.m_front;
+    while (tempNode != NULL)
+    {
+        tempNode->m_data=condition(tempNode->m_data);
+        tempNode=tempNode->m_next;
+    }
 
 }
 #endif //HW3_QUEUE_H

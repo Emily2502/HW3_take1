@@ -118,9 +118,50 @@ struct Queue<T>::Node
 template<class T>
 class Queue<T>::Iterator
 {
-    T m_data;
-    Node* m_next;
+private:
+    Node* m_node;
+    explicit Iterator(Node* node) = default;
+
+public:
+    T& operator*() const;
+    Iterator& operator++();
+    bool operator!=(const Iterator&);
+
 };
+
+template<class T>
+T& Queue<T>::Iterator::operator*() const
+{
+    return m_node->m_data;
+}
+
+template<class T>
+typename Queue<T>::Iterator& Queue<T>::Iterator::operator++()
+{
+    m_node = m_node->m_next;
+    return *this;
+}
+
+template<class T>
+bool Queue<T>::Iterator::operator!=(const Iterator& iterator)
+{
+    return m_node != iterator.m_node;
+}
+
+
+template<class T>
+typename Queue<T>::Iterator Queue<T>::begin() const
+{
+    Iterator result(m_front);
+    return result;
+}
+
+template<class T>
+typename Queue<T>::Iterator Queue<T>::end() const
+{
+    Iterator result(m_back->m_next);
+    return result;
+}
 
 template<class T, class Condition>
 Queue<T>& filter(const Queue<T>& queue, Condition condition);

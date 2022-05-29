@@ -16,7 +16,7 @@ public:
      * C'tor of Queue class
      *
      * @return
-     *      void
+     *      A new instance of Queue.
     */
     Queue() = default;
 
@@ -40,6 +40,8 @@ public:
     /**
      * Assignment operator of Queue class
      *
+     * @return
+     *      A new instance of Queue.
     */
     Queue<T>& operator=(const Queue<T>&);
 

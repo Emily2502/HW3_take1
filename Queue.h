@@ -100,10 +100,6 @@ public:
     Iterator end() const;
 
 
-
-    // ToDo: delete
-    void print_linked();
-
 private:
     struct Node;
     Node* m_front = NULL;
@@ -405,19 +401,6 @@ Queue<T> filter(Queue<T>& queue, Condition condition)
         temp_queue.popFront();
     }
     return result;
-}
-
-
-// ToDo: delete
-template<class T>
-void Queue<T>::print_linked()
-{
-    Node *t=m_front;
-    while(t!=NULL)
-    {
-        std::cout << t->m_data << std::endl;
-        t=t->m_next;
-    }
 }
 
 #endif //HW3_QUEUE_H

@@ -88,18 +88,43 @@ public:
     template<class Condition>
     static void transform(Queue queue, Condition condition);
 
+
+
+
+
+    class Iterator;
+    Iterator begin() const;
+    Iterator end() const;
+
+
+
     // ToDo: delete
     void print_linked();
 
 private:
-    struct Node
-    {
-        T m_data;
-        Node* m_next;
-    };
+    struct Node;
     Node* m_front = NULL;
     Node* m_back = NULL;
 };
+
+
+template<class T>
+struct Queue<T>::Node
+{
+    T m_data;
+    Node* m_next;
+};
+
+template<class T>
+class Queue<T>::Iterator
+{
+    T m_data;
+    Node* m_next;
+};
+
+
+
+
 
 template<class T, class Condition>
 Queue<T>& filter(const Queue<T>& queue, Condition condition);

@@ -7,7 +7,6 @@
 #include <iostream>
 
 
-
 template<class T>
 class Queue{
 
@@ -42,7 +41,7 @@ public:
      * Assignment operator of Queue class
      *
     */
-    Queue<T>& operator=(const Queue<T>& queue);
+    Queue<T>& operator=(const Queue<T>&);
 
     /**
      * Adds a new member to the back of a given queue
@@ -122,10 +121,6 @@ class Queue<T>::Iterator
     T m_data;
     Node* m_next;
 };
-
-
-
-
 
 template<class T, class Condition>
 Queue<T>& filter(const Queue<T>& queue, Condition condition);
@@ -238,23 +233,18 @@ T& Queue<T>::front()
         throw EmptyQueue();
     }
     return m_front->m_data;
-
-
 }
 
 
 template<class T>
 void Queue<T>::popFront()
 {
-
     Node* toDelete = m_front;
     if(m_front != NULL)
     {
         m_front = m_front->m_next;
     }
     delete toDelete;
-
-
 }
 
 

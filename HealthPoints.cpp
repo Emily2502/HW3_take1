@@ -18,6 +18,10 @@ HealthPoints::HealthPoints(int hp)
 HealthPoints& HealthPoints::operator+=(int hp)
 {
     m_HP += hp;
+    if (m_HP < MINIMUM_HP)
+    {
+        m_HP = MINIMUM_HP;
+    }
     if (m_HP > m_maxHP)
     {
         m_HP = m_maxHP;
@@ -31,6 +35,10 @@ HealthPoints& HealthPoints::operator-=(int hp)
     if (m_HP < MINIMUM_HP)
     {
         m_HP = MINIMUM_HP;
+    }
+    if (m_HP > m_maxHP)
+    {
+        m_HP = m_maxHP;
     }
     return *this;
 }

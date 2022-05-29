@@ -77,10 +77,13 @@ public:
     int size() const;
 
     /**
-     * //ToDo: comment
+     * Changes every member in a given queue according to a given condition
      *
+     *
+     * @param queue - the queue whose members will be changed.
+     * @param condition - condition according to which members will be changed.
      * @return
-     *
+     *      void
     */
     template<class Condition>
     static void transform(Queue queue, Condition condition);

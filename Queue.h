@@ -88,11 +88,23 @@ public:
     static void transform(Queue queue, Condition condition);
 
 
-
-
-
+    /**
+     * Iterator class for Queue
+    */
     class Iterator;
+
+    /**
+     * Beginning iterator for Queue
+     * @return
+     *      new iterator that points to the start of a given queue
+    */
     Iterator begin() const;
+
+    /**
+     * End iterator for Queue
+     * @return
+     *      new iterator that points to the end of a given queue
+    */
     Iterator end() const;
 
 
@@ -101,12 +113,31 @@ public:
     void print_linked();
 
 private:
+    class EmptyQueue : public std::exception{};
     struct Node;
     Node* m_front = NULL;
     Node* m_back = NULL;
-    class EmptyQueue : public std::exception{};
 };
 
+
+/**
+     * Creates a new queue, from an old one, whose members satisfy a given condition
+     *
+     *
+     * @param queue - the queue which the new one will be created from.
+     * @param condition - condition according to which members will be added to the new queue.
+     * @return
+     *      A new instance of Queue.
+    */
+template<class T, class Condition>
+Queue<T>& filter(const Queue<T>& queue, Condition condition);
+
+
+/** --------------------------------------------------------------------------------------------------
+ * Implementing Node struct:
+ * Queue is a linked list with pointers to the front and back and Node is the struct we use to
+ * implement said linked list
+----------------------------------------------------------------------------------------------------*/
 
 template<class T>
 struct Queue<T>::Node
@@ -115,18 +146,22 @@ struct Queue<T>::Node
     Node* m_next;
 };
 
+/** --------------------------------------------------------------------------------------------------
+ * Implementing Iterator class:
+ * we provide three operator as requested (*, !=, ++)
+----------------------------------------------------------------------------------------------------*/
+
 template<class T>
 class Queue<T>::Iterator
 {
-private:
-    Node* m_node;
-    explicit Iterator(Node* node) = default;
-
 public:
     T& operator*() const;
     Iterator& operator++();
     bool operator!=(const Iterator&);
 
+private:
+    Node* m_node;
+    explicit Iterator(Node* node) = default;
 };
 
 template<class T>
@@ -148,7 +183,6 @@ bool Queue<T>::Iterator::operator!=(const Iterator& iterator)
     return m_node != iterator.m_node;
 }
 
-
 template<class T>
 typename Queue<T>::Iterator Queue<T>::begin() const
 {
@@ -163,9 +197,14 @@ typename Queue<T>::Iterator Queue<T>::end() const
     return result;
 }
 
-template<class T, class Condition>
-Queue<T>& filter(const Queue<T>& queue, Condition condition);
 
+
+
+/** --------------------------------------------------------------------------------------------------
+ * Implementing Queue class:
+ * at first we implement copy c'tor, d'tor and assignment operator.
+ * secondly we implement functions requested.
+----------------------------------------------------------------------------------------------------*/
 
 template<class T>
 Queue<T>::Queue(const Queue<T>& queue)
@@ -242,7 +281,6 @@ Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
         m_back->m_next = NULL;
     }
 }
-
 
 template<class T>
 void Queue<T>::pushBack(T member)
@@ -344,12 +382,5 @@ void Queue<T>::print_linked()
         t=t->m_next;
     }
 }
-
-
-
-
-
-
-
 
 #endif //HW3_QUEUE_H

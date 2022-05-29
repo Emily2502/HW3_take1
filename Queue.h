@@ -104,6 +104,12 @@ private:
         explicit Node(T data, Node* next);
 
         /**
+         * Assignment operator of Queue class
+         *
+        */
+        Node& operator=(const Node&);
+
+        /**
          * D'tor of Node class
          *
          * @return
@@ -116,7 +122,7 @@ private:
 };
 
 template<class T>
-Queue<T>::Node::Node(T data, Node* next)
+Queue<T>::Node& Queue<T>::Node::operator=(T data, Node* next)
 {
     m_data = data;
     if (next != NULL)
@@ -125,7 +131,15 @@ Queue<T>::Node::Node(T data, Node* next)
     }
 }
 
-
+template<class T>
+Queue<T>::Node::Node(T data, Node* next)
+{
+    m_data = data;
+    if (next != NULL)
+    {
+        m_next = new Node;
+    }
+}
 
 
 template<class T, class Condition>
@@ -137,13 +151,20 @@ Queue<T>::Queue(const Queue<T>& queue)
 {
     Node* nodeToCopy = queue.m_front;
 
-
-
-    while (nodeToCopy->m_next != NULL)
+    if (nodeToCopy != NULL)
     {
-        Node temp(nodeToCopy->m_data, nodeToCopy);
+        Node temp(nodeToCopy->m_data, nodeToCopy->m_next);
         nodeToCopy = nodeToCopy->m_next;
+        while (nodeToCopy != NULL)
+        {
+            Node temp(nodeToCopy->m_data, nodeToCopy->m_next);
+            nodeToCopy = nodeToCopy->m_next;
+        }
     }
+
+
+
+
 
 
 

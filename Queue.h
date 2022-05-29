@@ -99,13 +99,12 @@ public:
     */
     Iterator end() const;
 
+    class EmptyQueue : public std::exception{};
 
 private:
     struct Node;
     Node* m_front = NULL;
     Node* m_back = NULL;
-
-    class EmptyQueue : public std::exception{};
 };
 
 
@@ -164,7 +163,7 @@ public:
 
 private:
     Node* m_node;
-    explicit Iterator(Node* node) = default;
+    explicit Iterator(Node* node) : m_node(node) {}
     friend class Queue<T>;
 };
 

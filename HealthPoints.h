@@ -19,7 +19,7 @@ public:
      * @return
      *      A new instance of HealthPoints.
     */
-    explicit HealthPoints(int hp = DEFAULT_MAX_HP);
+    HealthPoints(int hp = DEFAULT_MAX_HP);
 
     /**
      * Assignment operator of HealthPoints class

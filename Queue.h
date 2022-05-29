@@ -106,8 +106,10 @@ private:
     struct Node;
     Node* m_front = NULL;
     Node* m_back = NULL;
+
     class EmptyQueue : public std::exception{};
 };
+
 
 /**
      * Changes every member in a given queue according to a given condition

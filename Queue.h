@@ -109,6 +109,20 @@ private:
 };
 
 
+
+/**
+     * Creates a new queue, from an old one, whose members satisfy a given condition
+     *
+     *
+     * @param queue - the queue which the new one will be created from.
+     * @param condition - condition according to which members will be added to the new queue.
+     * @return
+     *      A new instance of Queue.
+    */
+template<class T, class Condition>
+Queue<T> filter(Queue<T>& queue, Condition condition);
+
+
 /**
      * Changes every member in a given queue according to a given condition
      *
@@ -190,10 +204,6 @@ typename Queue<T>::Iterator Queue<T>::end() const
     Iterator result(m_back->m_next);
     return result;
 }
-
-template<class T, class Condition>
-Queue<T> filter(Queue<T>& queue, Condition condition);
-
 
 /** --------------------------------------------------------------------------------------------------
  * Implementing Queue class:

@@ -7,7 +7,6 @@
 #include <iostream>
 
 
-
 template<class T>
 class Queue{
 
@@ -42,7 +41,7 @@ public:
      * Assignment operator of Queue class
      *
     */
-    Queue<T>& operator=(const Queue<T>& queue);
+    Queue<T>& operator=(const Queue<T>&);
 
     /**
      * Adds a new member to the back of a given queue
@@ -89,14 +88,45 @@ public:
     void print_linked();
 
 private:
-    struct Node
+    class Node
     {
+    public:
         T m_data;
         Node* m_next;
+
+
+        /**
+         * C'tor of Node class
+         *
+         * @return
+         *      void
+        */
+        explicit Node(T data, Node* next);
+
+        /**
+         * D'tor of Node class
+         *
+         * @return
+         *      void
+        */
+        ~Node() = default;
     };
     Node* m_front = NULL;
     Node* m_back = NULL;
 };
+
+template<class T>
+Queue<T>::Node::Node(T data, Node* next)
+{
+    m_data = data;
+    if (next != NULL)
+    {
+        m_next = new Node;
+    }
+}
+
+
+
 
 template<class T, class Condition>
 Queue<T>& filter(const Queue<T>& queue, Condition condition);
@@ -106,6 +136,21 @@ template<class T>
 Queue<T>::Queue(const Queue<T>& queue)
 {
     Node* nodeToCopy = queue.m_front;
+
+
+
+    while (nodeToCopy->m_next != NULL)
+    {
+        Node temp(nodeToCopy->m_data, nodeToCopy);
+        nodeToCopy = nodeToCopy->m_next;
+    }
+
+
+
+
+
+
+
     Node* nodeToChange;
 
     if (nodeToCopy != NULL)
@@ -252,4 +297,12 @@ void Queue<T>::print_linked()
         t=t->m_next;
     }
 }
+
+
+
+
+
+
+
+
 #endif //HW3_QUEUE_H

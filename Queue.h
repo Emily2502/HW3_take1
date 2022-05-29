@@ -1,17 +1,12 @@
 //
-// Created by baraa on 28/05/2022.
+// Created by Baraa on 28/05/2022.
 //
 
 #ifndef HW3_QUEUE_H
 #define HW3_QUEUE_H
 #include <iostream>
 
-template<class T>
-struct Node
-{
-    T m_data;
-    Node* m_next;
-};
+
 
 template<class T>
 class Queue{
@@ -29,9 +24,11 @@ public:
     /**
      * Copy c'tor of Queue class
      *
-     * @param //ToDo: comment
+     * @param Queue& - Reference to Queue to copy.
+     * @return
+     *      A new instance of Queue.
      */
-    Queue(const Queue& queue);
+    Queue(const Queue&);
 
     /**
      * D'tor of Queue class
@@ -44,8 +41,6 @@ public:
     /**
      * Assignment operator of Queue class
      *
-     * @return
-     *      //ToDo: comment
     */
     Queue<T>& operator=(const Queue<T>& queue);
 
@@ -88,14 +83,19 @@ public:
      *
     */
     template<class Condition>
-    friend void transform(Queue queue, Condition condition);
+    static void transform(Queue queue, Condition condition);
 
     // ToDo: delete
     void print_linked();
 
 private:
-    Node<T>* m_front = NULL;
-    Node<T>* m_back = NULL;
+    struct Node
+    {
+        T m_data;
+        Node* m_next;
+    };
+    Node* m_front = NULL;
+    Node* m_back = NULL;
 };
 
 template<class T, class Condition>
@@ -105,19 +105,19 @@ Queue<T>& filter(const Queue<T>& queue, Condition condition);
 template<class T>
 Queue<T>::Queue(const Queue<T>& queue)
 {
-    Node<T>* nodeToCopy = queue.m_front;
-    Node<T>* nodeToChange;
+    Node* nodeToCopy = queue.m_front;
+    Node* nodeToChange;
 
     if (nodeToCopy != NULL)
     {
-        nodeToChange = new Node<T>;
+        nodeToChange = new Node;
         nodeToChange->m_data = nodeToCopy->m_data;
         nodeToCopy = nodeToCopy->m_next;
         m_front = nodeToChange;
 
         while (nodeToCopy != NULL)
         {
-            nodeToChange->m_next = new Node<T>;
+            nodeToChange->m_next = new Node;
             nodeToChange = nodeToChange->m_next;
             nodeToChange->m_data = nodeToCopy->m_data;
             nodeToCopy = nodeToCopy->m_next;
@@ -131,10 +131,10 @@ Queue<T>::Queue(const Queue<T>& queue)
 template<class T>
 Queue<T>::~Queue()
 {
-    Node<T>* tempNode = m_front;
+    Node* tempNode = m_front;
     while(tempNode != NULL)
     {
-        Node<T>* toDelete = tempNode;
+        Node* toDelete = tempNode;
         tempNode = tempNode->m_next;
         delete toDelete;
     }
@@ -148,10 +148,10 @@ Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
     {
         return *this;
     }
-    Node<T>* tempFront1 = m_front;
+    Node* tempFront1 = m_front;
     while (tempFront1 != NULL)
     {
-        Node<T>* toDelete = tempFront1;
+        Node* toDelete = tempFront1;
         tempFront1 = tempFront1->m_next;
         delete toDelete;
     }
@@ -163,7 +163,7 @@ template<class T>
 void Queue<T>::pushBack(T member)
 {
     {
-        Node<T>* temp = new Node<T>;
+        Node* temp = new Node;
         temp->m_data = member;
         temp->m_next = NULL;
 
@@ -191,7 +191,7 @@ T& Queue<T>::front()
 template<class T>
 void Queue<T>::popFront()
 {
-    Node<T>* toDelete = m_front;
+    Node* toDelete = m_front;
     m_front = m_front->m_next;
     delete toDelete;
 }
@@ -201,7 +201,7 @@ template<class T>
 int Queue<T>::size() const
 {
     int result = 0;
-    Node<T>* tempNode = m_front;
+    Node* tempNode = m_front;
     while (tempNode != NULL)
     {
         ++result;
@@ -211,16 +211,16 @@ int Queue<T>::size() const
 }
 
 
-template<class T, class Condition>
-void transform(Queue<T> queue, Condition condition)
+template<class T>
+template<class Condition>
+void Queue<T>::transform(Queue<T> queue, Condition condition)
 {
-    Node<T>* tempNode = queue.m_front;
+    Node* tempNode = queue.m_front;
     while (tempNode != NULL)
     {
         tempNode->m_data=condition(tempNode->m_data);
         tempNode=tempNode->m_next;
     }
-
 }
 
 
@@ -245,7 +245,7 @@ Queue<T>& filter(const Queue<T>& queue, Condition condition)
 template<class T>
 void Queue<T>::print_linked()
 {
-    Node<T> *t=m_front;
+    Node *t=m_front;
     while(t!=NULL)
     {
         std::cout << t->m_data << std::endl;

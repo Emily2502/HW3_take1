@@ -148,11 +148,11 @@ Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
     {
         return *this;
     }
-    Node* tempFront1 = m_front;
-    while (tempFront1 != NULL)
+    Node* tempNode = m_front;
+    while (tempNode != NULL)
     {
-        Node* toDelete = tempFront1;
-        tempFront1 = tempFront1->m_next;
+        Node* toDelete = tempNode;
+        tempNode = tempNode->m_next;
         delete toDelete;
     }
     //ToDo: copy linked list to *this

@@ -41,7 +41,7 @@ public:
      * Assignment operator of Queue class
      *
      * @return
-     *      A new instance of Queue.
+     *      reference to queue.
     */
     Queue<T>& operator=(const Queue<T>&);
 

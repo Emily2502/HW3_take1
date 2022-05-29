@@ -303,4 +303,12 @@ void Queue<T>::print_linked()
         t=t->m_next;
     }
 }
+
+
+
+
+
+
+
+
 #endif //HW3_QUEUE_H

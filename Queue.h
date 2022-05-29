@@ -96,6 +96,7 @@ private:
     };
     Node* m_front = NULL;
     Node* m_back = NULL;
+    class EmptyQueue : public std::exception{};
 };
 
 template<class T, class Condition>
@@ -204,16 +205,28 @@ void Queue<T>::pushBack(T member)
 template<class T>
 T& Queue<T>::front()
 {
+    if(m_front==NULL)
+    {
+        throw EmptyQueue();
+    }
     return m_front->m_data;
+
+
 }
 
 
 template<class T>
 void Queue<T>::popFront()
 {
+
     Node* toDelete = m_front;
-    m_front = m_front->m_next;
+    if(m_front != NULL)
+    {
+        m_front = m_front->m_next;
+    }
     delete toDelete;
+
+
 }
 
 

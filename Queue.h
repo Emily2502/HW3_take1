@@ -113,10 +113,11 @@ public:
     void print_linked();
 
 private:
-    class EmptyQueue : public std::exception{};
     struct Node;
     Node* m_front = NULL;
     Node* m_back = NULL;
+
+    class EmptyQueue : public std::exception{};
 };
 
 

@@ -155,7 +155,27 @@ Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
         tempNode = tempNode->m_next;
         delete toDelete;
     }
-    //ToDo: copy linked list to *this
+
+    Node* nodeToCopy = queue.m_front;
+    Node* nodeToChange;
+
+    if (nodeToCopy != NULL)
+    {
+        nodeToChange = new Node;
+        nodeToChange->m_data = nodeToCopy->m_data;
+        nodeToCopy = nodeToCopy->m_next;
+        m_front = nodeToChange;
+
+        while (nodeToCopy != NULL)
+        {
+            nodeToChange->m_next = new Node;
+            nodeToChange = nodeToChange->m_next;
+            nodeToChange->m_data = nodeToCopy->m_data;
+            nodeToCopy = nodeToCopy->m_next;
+        }
+        m_back = nodeToChange;
+        m_back->m_next = NULL;
+    }
 }
 
 

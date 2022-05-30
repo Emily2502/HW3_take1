@@ -77,23 +77,16 @@ public:
     */
     int size() const;
 
-    /**
-     * Changes every member in a given queue according to a given condition
-     *
-     *
-     * @param queue - the queue whose members will be changed.
-     * @param condition - condition according to which members will be changed.
-     * @return
-     *      void
-    */
-    template<class Condition>
-    static void transform(Queue queue, Condition condition);
-
 
     /**
      * Iterator class for Queue
     */
     class Iterator;
+
+    /**
+     * ConstIterator class for Queue
+    */
+    class ConstIterator;
 
     /**
      * Beginning iterator for Queue
@@ -109,13 +102,14 @@ public:
     */
     Iterator end() const;
 
+    class EmptyQueue : public std::exception{};
+
 private:
     struct Node;
     Node* m_front = NULL;
     Node* m_back = NULL;
-
-    class EmptyQueue : public std::exception{};
 };
+
 
 
 /**
@@ -128,8 +122,20 @@ private:
      *      A new instance of Queue.
     */
 template<class T, class Condition>
-Queue<T>& filter(const Queue<T>& queue, Condition condition);
+Queue<T> filter(Queue<T>& queue, Condition condition);
 
+
+/**
+     * Changes every member in a given queue according to a given condition
+     *
+     *
+     * @param queue - the queue whose members will be changed.
+     * @param condition - condition according to which members will be changed.
+     * @return
+     *      void
+    */
+template<class T,class Condition>
+void transform(Queue<T>& queue, Condition condition);
 
 /** --------------------------------------------------------------------------------------------------
  * Implementing Node struct:
@@ -153,13 +159,16 @@ template<class T>
 class Queue<T>::Iterator
 {
 public:
-    T& operator*() const;
-    Iterator& operator++();
-    bool operator!=(const Iterator&);
+    class InvalidOperation : public std::exception{};
+
+    virtual T& operator*() const;
+    virtual Iterator& operator++();
+    bool operator!=(const Iterator&) const;
 
 private:
     Node* m_node;
-    explicit Iterator(Node* node) = default;
+    explicit Iterator(Node* node) : m_node(node) {}
+    friend class Queue<T>;
 };
 
 template<class T>
@@ -171,12 +180,16 @@ T& Queue<T>::Iterator::operator*() const
 template<class T>
 typename Queue<T>::Iterator& Queue<T>::Iterator::operator++()
 {
+    if(m_node==NULL)
+    {
+        throw InvalidOperation();
+    }
     m_node = m_node->m_next;
     return *this;
 }
 
 template<class T>
-bool Queue<T>::Iterator::operator!=(const Iterator& iterator)
+bool Queue<T>::Iterator::operator!=(const Iterator& iterator) const
 {
     return m_node != iterator.m_node;
 }
@@ -195,7 +208,49 @@ typename Queue<T>::Iterator Queue<T>::end() const
     return result;
 }
 
+/** --------------------------------------------------------------------------------------------------
+ * Implementing ConstIterator class:
+ * we provide three operator as requested (*, !=, ++)
+----------------------------------------------------------------------------------------------------*/
 
+template<class T>
+class Queue<T>::ConstIterator : public Iterator
+{
+public:
+    const T& operator*() const;
+    ConstIterator& operator++();
+    bool operator!=(const ConstIterator&);
+    bool operator!=(const Iterator&);
+
+private:
+    const Node* m_node;
+    explicit ConstIterator(const Node* node) : m_node(node) {}
+};
+
+template<class T>
+const T& Queue<T>::ConstIterator::operator*() const
+{
+    return m_node->m_data;
+}
+
+template<class T>
+typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++()
+{
+    m_node = m_node->m_next;
+    return *this;
+}
+
+template<class T>
+bool Queue<T>::ConstIterator::operator!=(const ConstIterator& iterator)
+{
+    return m_node != iterator.m_node;
+}
+
+template<class T>
+bool Queue<T>::ConstIterator::operator!=(const Iterator& iterator)
+{
+    return m_node != iterator.m_node;
+}
 
 
 /** --------------------------------------------------------------------------------------------------
@@ -212,17 +267,33 @@ Queue<T>::Queue(const Queue<T>& queue)
 
     if (nodeToCopy != NULL)
     {
-        nodeToChange = new Node;
+        try
+        {
+            nodeToChange = new Node;
+        }
+        catch (std::bad_alloc &e)
+        {
+            //std::cerr << "bad_alloc caught: " << ba.what();
+        }
+
         nodeToChange->m_data = nodeToCopy->m_data;
         nodeToCopy = nodeToCopy->m_next;
         m_front = nodeToChange;
 
         while (nodeToCopy != NULL)
         {
-            nodeToChange->m_next = new Node;
-            nodeToChange = nodeToChange->m_next;
-            nodeToChange->m_data = nodeToCopy->m_data;
-            nodeToCopy = nodeToCopy->m_next;
+
+            try
+            {
+                nodeToChange->m_next = new Node;
+                nodeToChange = nodeToChange->m_next;
+                nodeToChange->m_data = nodeToCopy->m_data;
+                nodeToCopy = nodeToCopy->m_next;
+            }
+            catch (std::bad_alloc &e)
+            {
+
+            }
         }
         m_back = nodeToChange;
         m_back->m_next = NULL;
@@ -263,17 +334,33 @@ Queue<T>& Queue<T>::operator=(const Queue<T> &queue)
 
     if (nodeToCopy != NULL)
     {
-        nodeToChange = new Node;
+        try
+        {
+            nodeToChange = new Node;
+        }
+        catch (std::bad_alloc &e)
+        {
+            //std::cerr << "bad_alloc caught: " << ba.what();
+        }
+
         nodeToChange->m_data = nodeToCopy->m_data;
         nodeToCopy = nodeToCopy->m_next;
         m_front = nodeToChange;
 
         while (nodeToCopy != NULL)
         {
-            nodeToChange->m_next = new Node;
-            nodeToChange = nodeToChange->m_next;
-            nodeToChange->m_data = nodeToCopy->m_data;
-            nodeToCopy = nodeToCopy->m_next;
+
+            try
+            {
+                nodeToChange->m_next = new Node;
+                nodeToChange = nodeToChange->m_next;
+                nodeToChange->m_data = nodeToCopy->m_data;
+                nodeToCopy = nodeToCopy->m_next;
+            }
+            catch (std::bad_alloc &e)
+            {
+
+            }
         }
         m_back = nodeToChange;
         m_back->m_next = NULL;
@@ -284,20 +371,27 @@ template<class T>
 void Queue<T>::pushBack(T member)
 {
     {
-        Node* temp = new Node;
-        temp->m_data = member;
-        temp->m_next = NULL;
+        try{
+            Node* temp = new Node;
+            temp->m_data = member;
+            temp->m_next = NULL;
 
-        if (m_front == NULL)
-        {
-            m_front = temp;
-            m_back = temp;
+            if (m_front == NULL)
+            {
+                m_front = temp;
+                m_back = temp;
+            }
+            else
+            {
+                m_back->m_next = temp;
+                m_back = m_back->m_next;
+            }
         }
-        else
+        catch (std::bad_alloc &e)
         {
-            m_back->m_next = temp;
-            m_back = m_back->m_next;
+            //std::cerr << "bad_alloc caught: " << e.what();
         }
+
     }
 }
 
@@ -339,21 +433,20 @@ int Queue<T>::size() const
 }
 
 
-template<class T>
-template<class Condition>
-void Queue<T>::transform(Queue<T> queue, Condition condition)
+
+template<class T,class Condition>
+void transform(Queue<T>& queue, Condition condition)
 {
-    Node* tempNode = queue.m_front;
-    while (tempNode != NULL)
+
+    for(typename Queue<T>::Iterator tempNode=queue.begin(); tempNode!=queue.end(); ++tempNode)
     {
-        tempNode->m_data=condition(tempNode->m_data);
-        tempNode=tempNode->m_next;
+        condition(*tempNode);
     }
 }
 
 
 template<class T, class Condition>
-Queue<T>& filter(const Queue<T>& queue, Condition condition)
+Queue<T> filter(Queue<T>& queue, Condition condition)
 {
     Queue<T> result;
     Queue<T> temp_queue = queue;
@@ -361,12 +454,11 @@ Queue<T>& filter(const Queue<T>& queue, Condition condition)
     {
         if (condition(temp_queue.front()))
         {
-            result.pushBack(queue.front());
+            result.pushBack(temp_queue.front());
         }
         temp_queue.popFront();
     }
     return result;
 }
-
 
 #endif //HW3_QUEUE_H

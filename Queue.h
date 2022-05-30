@@ -218,6 +218,8 @@ template<class T>
 class Queue<T>::ConstIterator
 {
 public:
+    class InvalidOperation : public std::exception{};
+
     const T& operator*() const;
     ConstIterator& operator++();
     bool operator!=(const ConstIterator&);

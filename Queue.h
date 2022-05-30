@@ -161,14 +161,15 @@ class Queue<T>::Iterator
 public:
     class InvalidOperation : public std::exception{};
 
-    virtual T& operator*() const;
-    virtual Iterator& operator++();
+    T& operator*() const;
+    Iterator& operator++();
     bool operator!=(const Iterator&) const;
 
 private:
     Node* m_node;
     explicit Iterator(Node* node) : m_node(node) {}
     friend class Queue<T>;
+    friend class ConstIterator;
 };
 
 template<class T>
@@ -214,18 +215,36 @@ typename Queue<T>::Iterator Queue<T>::end() const
 ----------------------------------------------------------------------------------------------------*/
 
 template<class T>
-class Queue<T>::ConstIterator : public Iterator
+class Queue<T>::ConstIterator
 {
 public:
     const T& operator*() const;
     ConstIterator& operator++();
     bool operator!=(const ConstIterator&);
     bool operator!=(const Iterator&);
+    ConstIterator& operator=(const Iterator&);
+    ConstIterator& operator=(const ConstIterator&);
+    ConstIterator(const Iterator& iterator) : m_node(iterator.m_node) {}
 
 private:
     const Node* m_node;
     explicit ConstIterator(const Node* node) : m_node(node) {}
 };
+
+template<class T>
+typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator=(const ConstIterator& iterator)
+{
+    m_node = iterator.m_node;
+    return *this;
+}
+
+template<class T>
+typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator=(const Iterator& iterator)
+{
+    m_node = iterator.m_node;
+    return *this;
+}
+
 
 template<class T>
 const T& Queue<T>::ConstIterator::operator*() const
@@ -241,17 +260,16 @@ typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++()
 }
 
 template<class T>
-bool Queue<T>::ConstIterator::operator!=(const ConstIterator& iterator)
-{
-    return m_node != iterator.m_node;
-}
-
-template<class T>
 bool Queue<T>::ConstIterator::operator!=(const Iterator& iterator)
 {
     return m_node != iterator.m_node;
 }
 
+template<class T>
+bool Queue<T>::ConstIterator::operator!=(const ConstIterator& iterator)
+{
+    return m_node != iterator.m_node;
+}
 
 /** --------------------------------------------------------------------------------------------------
  * Implementing Queue class:

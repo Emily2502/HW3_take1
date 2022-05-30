@@ -78,12 +78,15 @@ public:
     int size() const;
 
 
-
-
     /**
      * Iterator class for Queue
     */
     class Iterator;
+
+    /**
+     * ConstIterator class for Queue
+    */
+    class ConstIterator;
 
     /**
      * Beginning iterator for Queue
@@ -157,8 +160,9 @@ class Queue<T>::Iterator
 {
 public:
     class InvalidOperation : public std::exception{};
-    T& operator*() const;
-    Iterator& operator++();
+
+    virtual T& operator*() const;
+    virtual Iterator& operator++();
     bool operator!=(const Iterator&) const;
 
 private:
@@ -203,6 +207,44 @@ typename Queue<T>::Iterator Queue<T>::end() const
     Iterator result(m_back->m_next);
     return result;
 }
+
+/** --------------------------------------------------------------------------------------------------
+ * Implementing ConstIterator class:
+ * we provide three operator as requested (*, !=, ++)
+----------------------------------------------------------------------------------------------------*/
+
+template<class T>
+class Queue<T>::ConstIterator : public Iterator
+{
+public:
+    const T& operator*() const;
+    ConstIterator& operator++();
+    bool operator!=(const ConstIterator&);
+
+private:
+    const Node* m_node;
+    explicit ConstIterator(const Node* node) : m_node(node) {}
+};
+
+template<class T>
+const T& Queue<T>::ConstIterator::operator*() const
+{
+    return m_node->m_data;
+}
+
+template<class T>
+typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++()
+{
+    m_node = m_node->m_next;
+    return *this;
+}
+
+template<class T>
+bool Queue<T>::ConstIterator::operator!=(const ConstIterator& iterator)
+{
+    return m_node != iterator.m_node;
+}
+
 
 /** --------------------------------------------------------------------------------------------------
  * Implementing Queue class:

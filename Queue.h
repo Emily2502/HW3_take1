@@ -220,6 +220,7 @@ public:
     const T& operator*() const;
     ConstIterator& operator++();
     bool operator!=(const ConstIterator&);
+    bool operator!=(const Iterator&);
 
 private:
     const Node* m_node;
@@ -241,6 +242,12 @@ typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++()
 
 template<class T>
 bool Queue<T>::ConstIterator::operator!=(const ConstIterator& iterator)
+{
+    return m_node != iterator.m_node;
+}
+
+template<class T>
+bool Queue<T>::ConstIterator::operator!=(const Iterator& iterator)
 {
     return m_node != iterator.m_node;
 }

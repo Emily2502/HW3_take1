@@ -159,7 +159,7 @@ public:
     class InvalidOperation : public std::exception{};
     T& operator*() const;
     Iterator& operator++();
-    bool operator!=(const Iterator&);
+    bool operator!=(const Iterator&) const;
 
 private:
     Node* m_node;
@@ -185,7 +185,7 @@ typename Queue<T>::Iterator& Queue<T>::Iterator::operator++()
 }
 
 template<class T>
-bool Queue<T>::Iterator::operator!=(const Iterator& iterator)
+bool Queue<T>::Iterator::operator!=(const Iterator& iterator) const
 {
     return m_node != iterator.m_node;
 }

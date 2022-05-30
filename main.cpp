@@ -6,15 +6,15 @@
 
 int main(){
 
-    Queue<int> one;
-    one.pushBack(3);
-    one.pushBack(7);
-    one.pushBack(9);
-    //one.print_linked();
-
-    std::cout << one.front();
-    one.popFront();
-
+    typedef int u;
+    u i;
+    if (typeid(i) == typeid(int))
+    {
+        std::cout << "True" << std::endl;
+    }
+    else
+        std::cout << "False" << std::endl;
 
 
 }
+

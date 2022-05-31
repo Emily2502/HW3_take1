@@ -181,7 +181,7 @@ T& Queue<T>::Iterator::operator*() const
 template<class T>
 typename Queue<T>::Iterator& Queue<T>::Iterator::operator++()
 {
-    if(m_node==NULL)
+    if(m_node == NULL)
     {
         throw InvalidOperation();
     }
@@ -205,7 +205,7 @@ typename Queue<T>::Iterator Queue<T>::begin() const
 template<class T>
 typename Queue<T>::Iterator Queue<T>::end() const
 {
-    Iterator result(m_back->m_next);
+    Iterator result(NULL);
     return result;
 }
 
